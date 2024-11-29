@@ -1,12 +1,12 @@
 import Intro from './components/intro';
-import Main from './components/main';
+import MainImage from './components/main';
 import Programs from './components/programs';
 import Registration from './components/registration';
 
 export default function Home() {
   return (
-    <div>
-      <Main />
+    <div className="p-0">
+      <MainImage />
       <Intro />
       <Programs />
       <Registration />
