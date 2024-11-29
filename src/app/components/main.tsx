@@ -3,29 +3,29 @@ import Button from './common/button';
 
 export default function MainImage() {
   return (
-    <div className="relative flex items-center top-[6rem] sm:top-[0rem] sm:overflow-hidden sm:h-[17.5rem]">
+    <div className="relative flex items-center top-[6rem] sm:top-[0rem] sm:overflow-hidden sm:h-[17.5rem] md:overflow-hidden md:h-[30rem] md:top-[0.6rem]">
       <Image
-        className="w-full absolute z-0 sm:scale-175"
+        className="w-full absolute z-0 sm:scale-175 md:scale-150"
         src="/images/mainImage.png"
         width={1000}
         height={1000}
         alt="main image"
       />
-      <div className="z-20 flex flex-col gap-[3rem] sm:gap-[1.5rem] text-white pl-[15rem] sm:pl-[1rem]">
+      <div className="z-20 flex flex-col gap-[3rem] sm:gap-[1.5rem] text-white pl-[15rem] sm:pl-[1rem] md:pl-[2rem]">
         <div className="flex flex-col gap-[0.8rem] sm:gap-0">
           <div>
             <Image
-              className="w-[14rem] sm:w-[6rem]"
+              className="w-[14rem] sm:w-[6rem] md:w-[12rem]"
               src="/svg/logo-white.svg"
               width={1000}
               height={1000}
               alt="logo white"
             />
           </div>
-          <div className="text-gray-1 text-1.75-500 sm:text-1-500">
+          <div className="text-gray-1 text-1.75-500 sm:text-1-500 md:text-1.25-500">
             Forever Young, Forever Beautiful
           </div>
-          <div className="text-2-700 sm:text-1-500">
+          <div className="text-2-700 sm:text-1-500 md:text-1.75-500">
             <div className="h-[2.2rem] sm:h-[1rem]">
               젊음은 나이가 아닌 건강한 습관으로부터 시작됩니다.
             </div>
