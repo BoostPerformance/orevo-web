@@ -39,6 +39,7 @@ const config: Config = {
       colors: {
         black: {
           DEFAULT: '#2B2A2A',
+          1: '#131313',
         },
         green: {
           DEFAULT: '#005E38',
@@ -48,10 +49,11 @@ const config: Config = {
           1: '#E4E4E4',
           2: '#F9F9F9',
           3: '#625C5C',
+          4: '#9E9E9E',
+          5: '#686868',
         },
         beige: {
           DEFAULT: '#FFFDF8',
-          1: '#',
         },
       },
     },
