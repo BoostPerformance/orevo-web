@@ -5,7 +5,7 @@ const Registration = () => {
     <div className="flex flex-col items-center justify-center gap-[3rem] text-gray-1 bg-green py-[5.62rem]">
       <div className="flex flex-col items-center gap-[1rem]">
         <Image
-          className="w-[14rem] sm:w-[8rem]"
+          className="w-[14rem] sm:w-[8rem] md:w-[10rem]"
           src="svg/logo-white.svg"
           width={1000}
           height={1000}
