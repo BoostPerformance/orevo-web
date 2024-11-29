@@ -28,7 +28,7 @@ const Programs = () => {
         viewBox="0 0 900 2"
         fill="none"
       >
-        <path d="M0 1H900" stroke="#005E38" stroke-opacity="0.3" />
+        <path d="M0 1H900" stroke="#005E38" strokeOpacity="0.3" />
       </svg>
       <div className="flex flex-col items-center justify-center gap-[2rem]">
         <div className="text-green flex items-center gap-[1rem] text-2.5-700">
@@ -56,7 +56,7 @@ const Programs = () => {
         viewBox="0 0 900 2"
         fill="none"
       >
-        <path d="M0 1H900" stroke="#005E38" stroke-opacity="0.3" />
+        <path d="M0 1H900" stroke="#005E38" strokeOpacity="0.3" />
       </svg>
 
       <div className="flex flex-col items-center gap-[1rem]">
