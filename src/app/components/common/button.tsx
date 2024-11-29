@@ -10,7 +10,7 @@ const buttonStyles = {
 export default function Button({ variant }: ButtonProps) {
   return (
     <button
-      className={`flex w-[29rem] py-[1.75rem] rounded-[0.75rem] px-[4.25rem] items-center justify-center text-1.75-900 ${buttonStyles[variant]}`}
+      className={`flex w-[29rem] py-[1.75rem] rounded-[0.75rem] px-[4.25rem] items-center justify-center text-1.75-900 sm:text-1-700 sm:w-[12rem] sm:py-[1rem] sm:px-[2rem] ${buttonStyles[variant]}`}
     >
       체험수업 신청하기
     </button>
