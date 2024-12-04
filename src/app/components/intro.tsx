@@ -14,7 +14,7 @@ export default function Intro() {
           />
           차별점
         </div>
-        <div className="flex flex-col items-center justify-center gap-[1.38rem] text-gray-3 text-2-600 sm:gap-[0.8rem] md:text-1.25-500">
+        <div className="flex flex-col items-center justify-center gap-[1.38rem] text-gray-3 text-2-600 sm:text-1.25-500 sm:gap-[0.8rem]">
           <div>4060 여성을 위한 맞춤 운동 강도</div>
           <div>
             <Image

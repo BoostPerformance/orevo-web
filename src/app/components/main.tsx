@@ -22,11 +22,11 @@ export default function MainImage() {
               alt="logo white"
             />
           </div>
-          <div className="text-gray-1 text-1.75-500 sm:text-1-500 md:text-1.25-500">
+          <div className="text-gray-1 text-1.75-500 sm:text-1-500 md:text-1.5-500">
             Forever Young, Forever Beautiful
           </div>
           <div className="text-2-700 sm:text-1-500 md:text-1.75-500">
-            <div className="h-[2.2rem] sm:h-[1rem]">
+            <div className="h-[2.5rem] sm:h-[1.15rem]">
               젊음은 나이가 아닌 건강한 습관으로부터 시작됩니다.
             </div>
             <div>40-60대 여성을 위한 프리미엄 피트니스 스튜디오.</div>
