@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Button from './common/button';
+import Button from '@/components/common/button';
 const Registration = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-[3rem] text-gray-1 bg-green py-[5.62rem]">

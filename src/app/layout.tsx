@@ -1,6 +1,6 @@
 import './globals.css';
-import Footer from './components/common/footer';
-import Header from './components/common/header';
+import Footer from '@/components/common/footer';
+import Header from '@/components/common/header';
 import Script from 'next/script';
 import { Metadata, Viewport } from 'next';
 

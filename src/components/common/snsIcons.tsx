@@ -13,22 +13,21 @@ export default function SnsIcons() {
           height={100}
         />
       </Link>
-      <Link href="https://www.threads.net/@fitculator_official">
+      <Link href="https://instagram.com" target="_blank">
         <Image
-          className="sm:size-[1rem] w-[1.5rem]"
-          src="/svg/threads-logo.svg"
-          alt="threads-logo"
-          width={22}
-          height={10}
+          src="/svg/instagram.svg"
+          alt="Instagram"
+          width={24}
+          height={24}
+          className="w-6 h-6"
         />
       </Link>
-      <Link href="https://instagram.com/fitculator_official/">
+      <Link href="https://www.threads.net/@fitculator_official">
         <Image
-          className="sm:size-[1rem] w-[1.7rem]"
-          src="svg/instagram.svg"
-          alt="instagram-logo"
+          src="/svg/threads-logo.svg"
+          alt="threads-logo"
           width={24}
-          height={10}
+          height={24}
         />
       </Link>
     </div>
