@@ -7,7 +7,7 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
 interface DatePickerProps {
-  value?: string;
+  value?: Date | string;
   onChange?: (date: string) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -93,7 +93,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           readOnly
           value={selected ? format(selected, 'PPP', { locale: ko }) : ''}
           onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-          className="lg:w-[10rem] xs:w-[8rem] h-[2rem] mr-2 p-2 border rounded cursor-pointer focus:ring-2 focus:ring-green focus:border-transparent pr-10 placeholder:text-1-500 sm:w-[8rem] sm:h-[1.5rem]"
+          className="lg:w-[13rem] xs:w-[8rem] h-[2rem] mr-2 p-2 border rounded cursor-pointer focus:ring-2 focus:ring-green focus:border-transparent pr-10 placeholder:text-1-500 sm:w-[8rem] sm:h-[1.5rem]"
           placeholder={placeholder}
         />
         <div className="absolute lg:right-1 top-3 xs:left-[8.5rem] transform-translate-y-1/2 text-gray-400">
