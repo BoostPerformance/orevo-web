@@ -121,8 +121,10 @@ const config: Config = {
       lg: { min: '1025px' },
       md: { min: '768px', max: '1024px' },
       sm: { min: '480px', max: '767px' },
+      xs: { min: '320px', max: '479px' },
     },
   },
   plugins: [],
 };
+
 export default config;

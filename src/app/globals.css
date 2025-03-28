@@ -5,6 +5,19 @@
   --font-pretendard: 'Pretendard Variable', sans-serif;
 }
 
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+#__next,
+main {
+  width: 100%;
+}
+
 body {
   background: var(--background);
   font-family: var(--font-pretendard);

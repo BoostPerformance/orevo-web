@@ -1,24 +1,31 @@
 import Image from 'next/image';
-import Button from '@/components/common/button';
-const Registration = () => {
+import Button from '@/app/components/common/button';
+export default function Registration() {
   return (
-    <div className="flex flex-col items-center justify-center gap-[3rem] text-gray-1 bg-green py-[5.62rem]">
-      <div className="flex flex-col items-center gap-[1rem]">
-        <Image
-          className="w-[14rem] sm:w-[8rem] md:w-[10rem]"
-          src="svg/logo-white.svg"
-          width={1000}
-          height={1000}
-          alt="logo white"
-        />
-        <div className="text-2.5-700 text-white sm:text-1.25-700">
-          지금, 당신을 위한 건강한 변화를 시작하세요.
-        </div>
-      </div>
-      <Button variant="white" />
-      <div className="text-1.75-900 sm:text-1-700">문의 010-7977-1101</div>
-    </div>
-  );
-};
+    <>
+      {/* Location Section */}
 
-export default Registration;
+      {/* CTA Section */}
+      <section className="w-full bg-green py-16 ">
+        <div className="max-w-4xl mx-auto text-center px-4 flex flex-col items-center gap-[3rem]">
+          <div className="text-3-700 text-white mb-8 flex flex-col items-center">
+            <Image
+              src="/svg/logo-white.svg"
+              alt="Orevo"
+              width={100}
+              height={100}
+              className="w-[16rem] h-[10rem]"
+            />
+            <div>지금, 당신을 위한 건강한 변화를 시작하세요.</div>
+          </div>
+          <Button variant="white" href="/register">
+            체험수업 신청하기
+          </Button>
+          <div className="text-white text-1.5-500 mt-8">
+            문의: 010-7977-1101
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

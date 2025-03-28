@@ -84,7 +84,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   return (
     <div className="relative" ref={calendarRef}>
-      <label className="block mb-2 text-1.25-500">
+      <label className="block mb-2 lg:text-1.25-500 xs:text-1-500">
         {title} <span className="text-red-500">*</span>
       </label>
       <div className={`relative ${width}`}>
@@ -93,10 +93,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
           readOnly
           value={selected ? format(selected, 'PPP', { locale: ko }) : ''}
           onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-          className="w-[18rem] h-[2rem] p-2 border rounded cursor-pointer focus:ring-2 focus:ring-green focus:border-transparent pr-10 placeholder:text-1-500"
+          className="lg:w-[10rem] xs:w-[8rem] h-[2rem] mr-2 p-2 border rounded cursor-pointer focus:ring-2 focus:ring-green focus:border-transparent pr-10 placeholder:text-1-500 sm:w-[8rem] sm:h-[1.5rem]"
           placeholder={placeholder}
         />
-        <div className="absolute right-1 top-3 transform-translate-y-1/2 text-gray-400">
+        <div className="absolute lg:right-1 top-3 xs:left-[8.5rem] transform-translate-y-1/2 text-gray-400">
           <CalendarIcon />
         </div>
       </div>

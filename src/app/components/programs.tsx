@@ -1,72 +1,85 @@
-import Image from 'next/image';
-
-const Programs = () => {
+export default function Programs() {
   return (
-    <div className="flex flex-col items-center justify-center py-[5.625rem] px-[10rem] gap-[6.875rem] text-gray-3 bg-beige-1 sm:px-[1rem] md:px-[1rem] md:py-[4rem] md:pb-[6rem]">
-      <div className="flex flex-col items-center justify-center gap-[2rem] ">
-        <div className="text-green flex items-center gap-[1rem] text-2.5-700 sm:text-1.5-700">
+    <>
+      {/* Program Section */}
+      <section className="w-full max-w-4xl mx-auto py-20 px-4">
+        <h2 className="text-2-700 text-center text-green mb-[2rem]">
           프로그램 소개
-        </div>
-        <div className="flex flex-col gap-[3rem] md:gap-[2rem]">
-          <div className="flex flex-col items-center justify-center md:gap-[0.5rem]">
-            <div className="text-2.5-700 sm:text-1.5-700 text-black">
+        </h2>
+
+        <div className="flex flex-col gap-12">
+          <div className="text-center">
+            <h3 className="text-2.5-700 mb-4 text-gray-13">
               Cardio Day (화/금)
-            </div>
-            <div className="text-1.75-500 sm:text-1.25-500 text-center ">
-              심폐지구력 향상과 체지방 감소를 위한 <br /> 유산소 운동 중심
-              프로그램
+            </h3>
+            <div className="flex flex-col gap-4 text-1.75-500 text-gray-5">
+              <div>심박자구간 향상과 체지방 감소를 위한</div>
+              <div>균형잡힌 운동 프로그램</div>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <div className="text-2.5-700 text-black sm:text-1.5-700">
+
+          <div className="text-center">
+            <h3 className="text-2.5-700 mb-4 text-gray-13">
               Strength Day (월/목)
-            </div>
-            <div className="text-1.75-500 sm:text-1.25-500 text-center ">
-              근력 향상과 골밀도 강화를 위한 <br /> 근력운동 중심 프로그램
-            </div>
-          </div>
-        </div>
-      </div>
-      <Image src="/svg/linear.svg" width={1000} height={1000} alt="linear" />
-
-      <div className="flex flex-col items-center justify-center gap-[2rem]">
-        <div className="text-green flex items-center gap-[1rem] text-2.5-700 sm:text-1.5-700">
-          스케줄
-        </div>
-        <div className="md:flex md:flex-col md:gap-[2rem]">
-          <div className="flex flex-col items-center justify-center md:gap-[0.5rem]">
-            <div className="text-2.5-700 text-black sm:text-1.5-700">
-              Morning Class
-            </div>
-            <div className="text-1.75-500 sm:text-1.25-500 sm:text-center">
-              월・화・목・금 &nbsp; 7:30 AM <br />
-              월・화・목・금 &nbsp; 9:30 AM
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-center">
-            <div className="text-2.5-700 text-black  sm:text-1.5-700">
-              Evening Class
-            </div>
-            <div className="text-1.75-500 sm:text-1.25-500 sm:text-center">
-              화・목 &nbsp; 7:30 PM
+            </h3>
+            <div className="flex flex-col gap-4 text-1.75-500 text-gray-5">
+              <div>근력 향상과 균형도 강화를 위한</div>
+              <div>근력운동 중심 프로그램</div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <Image src="/svg/linear.svg" width={1000} height={1000} alt="linear" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="900"
+        height="2"
+        viewBox="0 0 900 2"
+        fill="none"
+      >
+        <path d="M0 1H900" stroke="#005E38" strokeOpacity="0.3" />
+      </svg>
 
-      <div className="flex flex-col items-center gap-[1rem]">
-        <div className="text-green flex items-center gap-[1rem] text-2.5-700 sm:text-1.5-700">
-          장소
+      {/* Schedule Section */}
+      <section className="w-full max-w-4xl mx-auto py-20 px-4">
+        <h2 className="text-2-700 text-center  text-green mb-[2rem]">스케줄</h2>
+
+        <div className="flex flex-col gap-12">
+          <div className="text-center text-1.75-500">
+            <div className="text-2.5-700 mb-4 text-gray-13">Morning Class</div>
+            <div className="flex flex-col gap-1 text-1.75-500 text-gray-5">
+              <div>월/화/목/금 7:30 AM</div>
+              <div>월/화/목/금 9:30 AM</div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <div className="text-2.5-700 mb-4 text-gray-13">Evening Class</div>
+            <div className="flex flex-col gap-1 text-1.75-500 text-gray-5">
+              <div>화/목 7:30 PM</div>
+              <div>화/목 9:30 PM</div>
+            </div>
+          </div>
         </div>
-        <div className="text-1.75-500 sm:text-1.25-500 sm:text-center">
-          서울 서대문구 연세로5길 26-17 4층 <br className="sm:inline hidden" />
-          (신촌 현대백화점 도보 3분)
+        <div className="mt-12">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="900"
+            height="2"
+            viewBox="0 0 900 2"
+            fill="none"
+          >
+            <path d="M0 1H900" stroke="#005E38" strokeOpacity="0.3" />
+          </svg>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section className="w-full max-w-4xl mx-auto py-20 px-4 mb-[2rem]">
+        <div className="text-2-700 text-center mb-8 text-green">장소</div>
+        <div className="text-1.5-500 text-center text-gray-5">
+          서울 서대문구 연희로5길 26-17 4층 (신촌 현대백화점 도보 3분)
+        </div>
+      </section>
+    </>
   );
-};
-
-export default Programs;
+}

@@ -24,37 +24,42 @@ export default function PricingChart() {
   ];
 
   return (
-    <div className="w-full rounded-3xl p-8 shadow-lg bg-green-800">
-      <div className=" bg-white rounded-3xl p-8 shadow-lg">
+    <div className="w-full rounded-3xl p-8 xs:py-6 xs:px-5 shadow-lg bg-green-800 xs:w-[95%] xs:flex xs:justify-center xs:items-center">
+      <div className=" bg-white rounded-3xl p-8 shadow-lg xs:w-full">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-green-800">Pricing</h2>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col items-center">
           {pricingOptions.map((option, index) => (
             <div
               key={index}
-              className=" flex justify-around items-center py-4 border-b border-gray-200 last:border-0"
+              className=" flex justify-between items-center py-4 border-b border-gray-200 last:border-0 w-[25rem] xs:w-full"
             >
               <div>
-                <h3 className="text-xl font-semibold text-green-800">
+                <div className="lg:text-1.5-700 font-semibold text-green-800 xs:text-1-700">
                   {option.title}
-                </h3>
-                <p className="text-gray-600 text-sm">{option.titleEn}</p>
+                </div>
+                <p className="text-gray-600 lg:text-1-500 xs:text-0.75-500">
+                  {option.titleEn}
+                </p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-green-800">
+                <div className="lg:text-1.5-700 font-semibold text-green-800 xs:text-1-700">
                   {option.price.toLocaleString()}원
-                </p>
-                <p className="text-gray-600 text-sm">
+                </div>
+                <p className="text-gray-600 lg:text-1-500 xs:text-0.75-500">
                   ₩{option.price.toLocaleString()}
                 </p>
               </div>
             </div>
           ))}
         </div>
-        <div className="mt-6 text-center text-gray-500 text-sm">
+        <a
+          className="mt-6 text-center text-gray-500 lg:text-1-500 xs:text-0.75-500 flex justify-center no-underline"
+          href="https://www.instagram.com/orevo_official/"
+        >
           @orevo_official
-        </div>
+        </a>
       </div>
     </div>
   );

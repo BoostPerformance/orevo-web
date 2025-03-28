@@ -1,9 +1,9 @@
 'use client';
 
-import MainImage from '@/components/MainImage';
-import Intro from '@/components/Intro';
-import Programs from '@/components/Programs';
-import Registration from '@/components/Registration';
+import MainImage from '@/app/components/mainImage';
+import Intro from '@/app/components/intro';
+import Programs from '@/app/components/programs';
+import Registration from '@/app/components/registration';
 
 export default function Home() {
   return (
