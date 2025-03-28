@@ -107,22 +107,23 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center xs:w-[80%] xs:px-[2rem]">
-      <div className="w-full max-w-[50rem] px-4 py-8">
-        <div className="text-2.5-700 font-bold mb-6">
-          Orevo 3회 체험 신청하기
+    <div className="w-full flex flex-col justify-center items-center xs:w-[100%] xs:px-[0rem]">
+      <div className="xs:flex xs:flex-col xs:items-center w-full max-w-[50rem] px-4 py-8">
+        <div className="lg:text-2.5-700 xs:text-1.5-700 font-bold mb-6">
+          Orevo 신청하기
         </div>
 
         <div className="mb-8">
-          <p className="mb-4">
-            Orevo는 40대 이상 여성들을 위한 전용 운동 공간으로, 서울대 & 연세대
-            체육 전공 코치진이 직접 수업합니다. 💪
-          </p>
-          <p className="mb-4">
-            전문적인 코칭 아래 근력운동과 유산소 운동을 균형 있게 배우며, 부상
-            걱정 없이 안전하게 운동할 수 있는 곳입니다. Orevo에서 건강한 변화를
-            경험하세요!
-          </p>
+          <div className="mb-4 lg:text-1.25-500 xs:text-0.8-500">
+            Orevo는 40대 이상 여성들을 위한 전용 운동 공간으로,
+            <br className="lg:hidden xs:inline" /> 서울대 & 연세대 체육 전공
+            코치진이 직접 수업합니다. 💪
+          </div>
+          <div className="mb-4 g:text-1.25-500 xs:text-0.8-500">
+            전문적인 코칭 아래 근력운동과 유산소 운동을 균형 있게 배우며,
+            <br className="lg:hidden xs:inline" /> 부상 걱정 없이 안전하게
+            운동할 수 있는 곳입니다. <br /> Orevo에서 건강한 변화를 경험하세요!
+          </div>
 
           <div className="space-y-8 mb-[6rem]">
             <WeeklySchedule />

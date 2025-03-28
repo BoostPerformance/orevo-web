@@ -30,7 +30,7 @@ export default function RegisterForm({
       onSubmit={handleSubmit}
       className="flex flex-col gap-[3rem] py-[2rem] xs:w-[18rem] xs:items-start xs:justify-center"
     >
-      <div className="text-gray-3 text-0.875-500 ">
+      <div className="text-gray-3 lg:text-0.875-500 xs:text-0.75-500">
         <span className="text-red-500 ">*</span> 표시는 필수 입력 항목입니다.
       </div>
       <div>

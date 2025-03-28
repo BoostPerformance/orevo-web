@@ -12,8 +12,8 @@ export default function WeeklySchedule() {
   };
 
   return (
-    <div className="w-full bg-[#F8F7F4] rounded-lg p-6 xs:p-2 border-green-800 text-gray-13">
-      <div className="overflow-x-auto">
+    <div className="w-full bg-[#F8F7F4] rounded-lg p-6 xs:px-2 border-green-800 text-gray-13">
+      <div className="lg:overflow-x-auto">
         <table className="w-full border-collapse text-sm xs:text-1-500">
           <thead>
             <tr>
