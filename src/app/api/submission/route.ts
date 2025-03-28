@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
-import { RegistrationData } from '@/types/registration';
+import { RegistrationData } from '@/app/types/registration';
 import {
   sendSuccessToSlack as sendRegistrationSuccess,
   sendErrorToSlack as sendRegistrationError,
-} from '@/lib/slackWebhook';
+} from '@/app/lib/slackWebhook';
 
 // Constants
 // const TRANSACTION_TIMEOUT = 10000;
