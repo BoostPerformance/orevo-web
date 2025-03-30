@@ -15,11 +15,12 @@ export default function RegisterPage() {
     phone: '',
     email: '',
     ageGroup: '',
-    preferredDate: '', // DatePicker는 string 형태로 값을 주고받습니다
+    preferredDate: '',
     preferredTime: '',
     selectedClassType: '',
     agreementChecked: false,
-    paymentAmount: 30000,
+    paymentAmount: 0,
+    orderName: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,72 +38,84 @@ export default function RegisterPage() {
     setSubmitStatus({ type: null, message: '' });
 
     try {
-      // Generate unique order ID
       const orderId = nanoid();
-
-      // Load Toss Payments
       const tossPayments = await loadTossPayments(
         process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || 'no key'
       );
 
-      // Save form data to localStorage for retrieval after payment
-      localStorage.setItem(
-        'registrationData',
-        JSON.stringify({
-          ...formData,
-          orderId,
-          paymentStatus: 'pending',
-          submissionDate: new Date().toISOString(),
-        })
-      );
+      // console.log('Form Data:', formData);
 
-      // API 호출 예시 (실제 구현은 필요에 따라 조정)
-      // 여기서 수업 유형 및 다른 정보를 포함하여 데이터베이스에 저장
-      try {
-        const response = await fetch('/api/trial-registrations', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            phone: formData.phone,
-            email: formData.email || null,
-            age_group:
-              formData.ageGroup === '40대'
-                ? '40s'
-                : formData.ageGroup === '50대'
-                ? '50s'
-                : formData.ageGroup === '60대'
-                ? '60s'
-                : 'OTHER',
-            preferred_start_date: formData.preferredDate,
-            preferred_time: formData.preferredTime.replace('오전 ', ''),
-            class_type: formData.selectedClassType,
-            consent_to_terms: formData.agreementChecked,
-            payment_status: 'PENDING',
-            price: formData.paymentAmount,
-            orderId: orderId,
-          }),
-        });
+      localStorage.setItem('formData', JSON.stringify(formData));
 
-        if (!response.ok) {
-          throw new Error('서버 등록 실패');
-        }
-      } catch (apiError) {
-        console.error('API call failed:', apiError);
-        // API 호출이 실패해도 결제는 진행
-      }
+      console.log('새로운 주문번호 생성:', orderId);
+      //console.log('Form data saved:', JSON.stringify(formData));
 
-      // Request payment
       await tossPayments.requestPayment('카드', {
-        amount: formData.paymentAmount || 0,
+        amount: Number(`${formData.paymentAmount}`),
         orderId,
-        orderName: 'Orevo 3회 체험권',
-        customerName: formData.name,
-        successUrl: `${window.location.origin}/payment/success`,
-        failUrl: `${window.location.origin}/payment/fail`,
+        orderName: `${formData.selectedClassType}`,
+        successUrl: `${window.location.origin}/payment/complete`,
+        failUrl: `${window.location.origin}/payment-fail`,
       });
+
+      // // Save form data to localStorage for retrieval after payment
+      // localStorage.setItem(
+      //   'registrationData',
+      //   JSON.stringify({
+      //     ...formData,
+      //     orderId,
+      //     paymentStatus: 'pending',
+      //     submissionDate: new Date().toISOString(),
+      //   })
+      // );
+
+      // // API 호출 예시 (실제 구현은 필요에 따라 조정)
+      // // 여기서 수업 유형 및 다른 정보를 포함하여 데이터베이스에 저장
+      // try {
+      //   const response = await fetch('/api/payment', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify({
+      //       name: formData.name,
+      //       phone: formData.phone,
+      //       email: formData.email || null,
+      //       age_group:
+      //         formData.ageGroup === '40대'
+      //           ? '40s'
+      //           : formData.ageGroup === '50대'
+      //           ? '50s'
+      //           : formData.ageGroup === '60대'
+      //           ? '60s'
+      //           : 'OTHER',
+      //       preferred_start_date: formData.preferredDate,
+      //       preferred_time: formData.preferredTime.replace('오전 ', ''),
+      //       class_type: formData.selectedClassType,
+      //       consent_to_terms: formData.agreementChecked,
+      //       payment_status: 'PENDING',
+      //       price: formData.paymentAmount,
+      //       orderId: orderId,
+      //     }),
+      //   });
+
+      //   if (!response.ok) {
+      //     throw new Error('서버 등록 실패');
+      //   }
+      // } catch (apiError) {
+      //   console.error('API call failed:', apiError);
+      //   // API 호출이 실패해도 결제는 진행
+      // }
+
+      // // Request payment
+      // await tossPayments.requestPayment('카드', {
+      //   amount: formData.paymentAmount || 0,
+      //   orderId,
+      //   orderName: formData.orderName,
+      //   customerName: formData.name,
+      //   successUrl: `${window.location.origin}/payment/success`,
+      //   failUrl: `${window.location.origin}/payment/fail`,
+      // });
     } catch (error) {
       console.error('Error initiating payment:', error);
       setSubmitStatus({

@@ -7,9 +7,10 @@ export interface RegistrationData {
   ageGroup: '40대' | '50대' | '60대' | '그 외' | string;
   preferredDate: Date | string;
   preferredTime: '오전 08:15' | '오전 09:30' | '오전 10:45' | string;
-  selectedClassType: string; // 새로 추가된 필드: 수업 유형 선택
+  selectedClassType: string;
   agreementChecked: boolean;
-  paymentAmount?: number; // 결제 금액
+  paymentAmount?: number;
+  orderName: string;
 }
 
 export interface SubmitStatus {

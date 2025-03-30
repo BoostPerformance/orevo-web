@@ -96,7 +96,7 @@ export default function RegisterForm({
 
         <div>
           <label className="block mb-3 lg:text-1.25-500 xs:text-1-500">
-            연락처 <span className="text-red-500">*</span>
+            연락처 (010-1234-5678) <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
@@ -104,7 +104,7 @@ export default function RegisterForm({
             className="border-gray-3 lg:w-2/5 xs:w-full h-[2rem] p-2 border rounded focus:ring-2 focus:ring-green focus:border-transparent placeholder:text-1-500"
             value={formData.phone}
             onChange={handlePhoneChange}
-            placeholder="010-0000-0000"
+            placeholder="010-1234-5678"
             pattern="010-\d{4}-\d{4}"
             title="010-0000-0000 형식으로 입력해주세요"
           />
@@ -175,12 +175,30 @@ export default function RegisterForm({
                   value={classType}
                   required
                   checked={formData.selectedClassType === classType}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const selectedType = e.target.value;
+                    let paymentAmount = 0;
+
+                    switch (selectedType) {
+                      case '1개월 멤버십 (300,000원)':
+                        paymentAmount = 300000;
+                        break;
+                      case '10회권 (250,000원)':
+                        paymentAmount = 250000;
+                        break;
+                      case '3회 체험권 (30,000원)':
+                        paymentAmount = 30000;
+                        break;
+                      default:
+                        paymentAmount = 0;
+                    }
+
                     setFormData({
                       ...formData,
-                      selectedClassType: e.target.value,
-                    })
-                  }
+                      selectedClassType: selectedType,
+                      paymentAmount: paymentAmount,
+                    });
+                  }}
                 />
                 {classType}
               </label>
