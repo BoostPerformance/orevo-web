@@ -53,17 +53,17 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('Form Data Before Submit:', {
-      name: formData.users.name,
-      phone: formData.users.phone,
-      email: formData.users.email,
-      ageGroup: formData.users.ageGroup,
-      preferredDate: formData.programs.preferred_start_date,
-      preferredTime: formData.programs.preferred_time,
-      selectedClassType: formData.programs.program_type,
-      consent_to_terms: formData.trial_registration.consent_to_terms,
-      paymentAmount: formData.payments.amount,
-    });
+    // console.log('Form Data Before Submit:', {
+    //   name: formData.users.name,
+    //   phone: formData.users.phone,
+    //   email: formData.users.email,
+    //   ageGroup: formData.users.ageGroup,
+    //   preferredDate: formData.programs.preferred_start_date,
+    //   preferredTime: formData.programs.preferred_time,
+    //   selectedClassType: formData.programs.program_type,
+    //   consent_to_terms: formData.trial_registration.consent_to_terms,
+    //   paymentAmount: formData.payments.amount,
+    // });
 
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
@@ -91,22 +91,22 @@ export default function RegisterPage() {
         })
       );
 
-      console.log('새로운 주문번호 생성:', orderId);
-      console.log(
-        'Form data saved to registrationData:',
-        JSON.stringify({
-          name: formData.users.name,
-          phone: formData.users.phone,
-          email: formData.users.email,
-          ageGroup: formData.users.ageGroup,
-          preferredDate: formData.programs.preferred_start_date,
-          preferredTime: formData.programs.preferred_time,
-          selectedClassType: formData.programs.program_type,
-          agreementChecked: formData.trial_registration.consent_to_terms,
-          paymentAmount: price || formData.payments.amount,
-          orderId: orderId,
-        })
-      );
+      // console.log('새로운 주문번호 생성:', orderId);
+      // console.log(
+      //   'Form data saved to registrationData:',
+      //   JSON.stringify({
+      //     name: formData.users.name,
+      //     phone: formData.users.phone,
+      //     email: formData.users.email,
+      //     ageGroup: formData.users.ageGroup,
+      //     preferredDate: formData.programs.preferred_start_date,
+      //     preferredTime: formData.programs.preferred_time,
+      //     selectedClassType: formData.programs.program_type,
+      //     agreementChecked: formData.trial_registration.consent_to_terms,
+      //     paymentAmount: price || formData.payments.amount,
+      //     orderId: orderId,
+      //   })
+      // );
 
       await tossPayments.requestPayment('카드', {
         amount: Number(`${price || formData.payments.amount}`),

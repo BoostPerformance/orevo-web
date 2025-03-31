@@ -31,7 +31,7 @@ interface FormData {
 // 폼 데이터 유효성 검사 (1. 필수 필드 검사)
 const validateFormData = (formData: FormData) => {
   try {
-    console.log('formData', formData);
+    //.log('formData', formData);
     const requiredFields = ['users', 'programs', 'payments'] as const;
     //type RequiredField = (typeof requiredFields)[number];
 
@@ -95,10 +95,10 @@ export default function PaymentComplete() {
   const mutation = useMutation<void, Error, FormData>({
     mutationFn: async (formData) => {
       // API 요청 직전에 최종 데이터 자세히 로깅
-      console.log(
-        '[PaymentComplete] /api/subscriptions API 호출 시작 - 요청 데이터:',
-        JSON.stringify(formData, null, 2)
-      );
+      //console.log(
+      //  '[PaymentComplete] /api/subscriptions API 호출 시작 - 요청 데이터:',
+      //  JSON.stringify(formData, null, 2)
+      //);
 
       try {
         const response = await fetch('/api/subscriptions', {
@@ -107,10 +107,10 @@ export default function PaymentComplete() {
           body: JSON.stringify(formData),
         });
 
-        console.log('[PaymentComplete] API 응답 상태:', response.status);
+        //console.log('[PaymentComplete] API 응답 상태:', response.status);
 
         const responseData = await response.json();
-        console.log('[PaymentComplete] API 응답 데이터:', responseData);
+        //console.log('[PaymentComplete] API 응답 데이터:', responseData);
 
         if (!response.ok) {
           console.error('[PaymentComplete] API 오류 응답:', responseData);
@@ -161,7 +161,7 @@ export default function PaymentComplete() {
         }
 
         const registrationData = JSON.parse(savedFormData);
-        console.log('로드된 registrationData:', registrationData);
+        // console.log('로드된 registrationData:', registrationData);
 
         // API 요청 파라미터 구성
         const requestData = {
@@ -181,7 +181,7 @@ export default function PaymentComplete() {
         // 토스페이먼츠 결제 확인 API 호출
         const paymentResult = await attemptPaymentConfirmation(requestData);
 
-        console.log('paymentResult', JSON.stringify(paymentResult, null, 2));
+        // console.log('paymentResult', JSON.stringify(paymentResult, null, 2));
 
         // API 호출에 필요한 데이터 구조 생성
         const formData = {
@@ -220,7 +220,7 @@ export default function PaymentComplete() {
           );
         }
 
-        console.log('최종 요청 데이터:', formData);
+        // console.log('최종 요청 데이터:', formData);
         mutation.mutate(formData);
       } catch (error) {
         const errorMessage =
