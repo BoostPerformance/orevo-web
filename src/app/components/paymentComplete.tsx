@@ -22,21 +22,16 @@ interface FormData {
   payments: {
     amount: number;
     payment_method: string;
-    payment_key: string;
-    order_id: string;
-    payment_date: string;
-    card_type: string | null;
-    owner_type: string | null;
-    currency: string;
-    status: string;
-    approve_no: string | null;
+    payment_status: string;
+    reference_type: string;
+    transaction_id: string;
   };
 }
 
 // 폼 데이터 유효성 검사 (1. 필수 필드 검사)
 const validateFormData = (formData: FormData) => {
   try {
-    console.log('formData', formData);
+    //.log('formData', formData);
     const requiredFields = ['users', 'programs', 'payments'] as const;
     //type RequiredField = (typeof requiredFields)[number];
 
@@ -99,27 +94,48 @@ export default function PaymentComplete() {
 
   const mutation = useMutation<void, Error, FormData>({
     mutationFn: async (formData) => {
-      const response = await fetch('/api/subscriptions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      // API 요청 직전에 최종 데이터 자세히 로깅
+      //console.log(
+      //  '[PaymentComplete] /api/subscriptions API 호출 시작 - 요청 데이터:',
+      //  JSON.stringify(formData, null, 2)
+      //);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '폼 제출에 실패했습니다.');
+      try {
+        const response = await fetch('/api/subscriptions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        //console.log('[PaymentComplete] API 응답 상태:', response.status);
+
+        const responseData = await response.json();
+        //console.log('[PaymentComplete] API 응답 데이터:', responseData);
+
+        if (!response.ok) {
+          console.error('[PaymentComplete] API 오류 응답:', responseData);
+          throw new Error(responseData.message || '폼 제출에 실패했습니다.');
+        }
+
+        return responseData;
+      } catch (error) {
+        console.error('[PaymentComplete] API 호출 중 예외 발생:', error);
+        throw error;
       }
-
-      return response.json();
     },
     onSuccess: async (data) => {
-      console.log('폼 제출 성공:', data);
+      console.log('[PaymentComplete] 폼 제출 성공:', data);
       // 성공 시 localStorage의 임시 데이터 삭제
       localStorage.removeItem('registrationData');
       window.location.href = '/payment-success';
     },
     onError: (error) => {
-      console.error('폼 제출 중 에러 발생:', error);
+      console.error('[PaymentComplete] 폼 제출 중 에러 발생:', error);
+      // 에러의 원인을 더 자세히 추적
+      if (error instanceof Error) {
+        console.error('[PaymentComplete] 에러 메시지:', error.message);
+        console.error('[PaymentComplete] 에러 스택:', error.stack);
+      }
       window.location.href = '/payment-fail';
     },
   });
@@ -134,10 +150,18 @@ export default function PaymentComplete() {
         const savedFormData = localStorage.getItem('registrationData');
 
         if (!savedFormData) {
+          console.error(
+            '신청 폼 데이터가 없습니다. localStorage 내용:',
+            Object.keys(localStorage).map(
+              (key) =>
+                `${key}: ${localStorage.getItem(key)?.substring(0, 50)}...`
+            )
+          );
           throw new Error('신청 폼 데이터가 없습니다');
         }
 
         const registrationData = JSON.parse(savedFormData);
+        // console.log('로드된 registrationData:', registrationData);
 
         // API 요청 파라미터 구성
         const requestData = {
@@ -157,7 +181,7 @@ export default function PaymentComplete() {
         // 토스페이먼츠 결제 확인 API 호출
         const paymentResult = await attemptPaymentConfirmation(requestData);
 
-        console.log('paymentResult', paymentResult);
+        // console.log('paymentResult', JSON.stringify(paymentResult, null, 2));
 
         // API 호출에 필요한 데이터 구조 생성
         const formData = {
@@ -178,15 +202,10 @@ export default function PaymentComplete() {
           payments: {
             amount:
               paymentResult.totalAmount || parseInt(requestData.amount || '0'),
-            payment_method: paymentResult.method || '신용카드',
-            payment_key: paymentResult.paymentKey || requestData.paymentKey,
-            order_id: paymentResult.orderId || requestData.orderId,
-            payment_date: paymentResult.approvedAt || new Date().toISOString(),
-            card_type: paymentResult.card?.cardType || null,
-            owner_type: paymentResult.card?.ownerType || null,
-            currency: paymentResult.currency || 'KRW',
-            status: paymentResult.status || 'DONE',
-            approve_no: paymentResult.card?.approveNo || null,
+            payment_method: '신용카드',
+            payment_status: 'COMPLETED',
+            reference_type: mapProgramType(registrationData.selectedClassType),
+            transaction_id: paymentResult.paymentKey || requestData.paymentKey,
           },
         };
 
@@ -201,7 +220,7 @@ export default function PaymentComplete() {
           );
         }
 
-        console.log('최종 요청 데이터:', formData);
+        // console.log('최종 요청 데이터:', formData);
         mutation.mutate(formData);
       } catch (error) {
         const errorMessage =

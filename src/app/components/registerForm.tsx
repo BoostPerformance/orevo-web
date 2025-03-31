@@ -36,13 +36,13 @@ export default function RegisterForm({
     if (!mounted) return;
 
     const isValid =
-      !!formData.name &&
-      !!formData.phone &&
-      !!formData.ageGroup &&
-      !!formData.preferredDate &&
-      !!formData.preferredTime &&
-      !!formData.selectedClassType &&
-      formData.agreementChecked;
+      !!formData.users.name &&
+      !!formData.users.phone &&
+      !!formData.users.ageGroup &&
+      !!formData.programs.preferred_start_date &&
+      !!formData.programs.preferred_time &&
+      !!formData.programs.program_type &&
+      formData.trial_registration.consent_to_terms;
 
     setLocalFormValid(isValid);
   }, [formData, mounted]);
@@ -70,13 +70,16 @@ export default function RegisterForm({
       value = value.slice(0, 8) + '-' + value.slice(8);
     }
 
-    setFormData({ ...formData, phone: value });
+    setFormData({ ...formData, users: { ...formData.users, phone: value } });
   };
 
   // 날짜 선택 핸들러
   const handleDateChange = (dateString: string) => {
     if (!mounted) return;
-    setFormData({ ...formData, preferredDate: dateString });
+    setFormData({
+      ...formData,
+      programs: { ...formData.programs, preferred_start_date: dateString },
+    });
   };
 
   if (!mounted) {
@@ -100,8 +103,13 @@ export default function RegisterForm({
             type="text"
             required
             className="border-gray-3 lg:w-2/5 xs:w-full h-[2rem] p-2 border rounded focus:ring-2 focus:ring-green focus:border-transparent placeholder:text-1-500"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            value={formData.users.name}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                users: { ...formData.users, name: e.target.value },
+              })
+            }
             placeholder="이름을 입력해주세요"
           />
         </div>
@@ -114,17 +122,18 @@ export default function RegisterForm({
             type="tel"
             required
             className="border-gray-3 lg:w-2/5 xs:w-full h-[2rem] p-2 border rounded focus:ring-2 focus:ring-green focus:border-transparent placeholder:text-1-500"
-            value={formData.phone}
+            value={formData.users.phone}
             onChange={handlePhoneChange}
             placeholder="010-1234-5678"
             pattern="010-\d{4}-\d{4}"
             title="010-0000-0000 형식으로 입력해주세요"
           />
-          {formData.phone && !/^010-\d{4}-\d{4}$/.test(formData.phone) && (
-            <p className="text-red-500 mt-1 text-sm">
-              010-0000-0000 형식으로 입력해주세요
-            </p>
-          )}
+          {formData.users.phone &&
+            !/^010-\d{4}-\d{4}$/.test(formData.users.phone) && (
+              <p className="text-red-500 mt-1 text-sm">
+                010-0000-0000 형식으로 입력해주세요
+              </p>
+            )}
         </div>
 
         <div>
@@ -134,9 +143,12 @@ export default function RegisterForm({
           <input
             type="email"
             className="border-gray-3 lg:w-2/5 xs:w-full h-[2rem] p-2 border rounded focus:ring-2 focus:ring-green focus:border-transparent placeholder:text-1-500"
-            value={formData.email || ''}
+            value={formData.users.email || ''}
             onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
+              setFormData({
+                ...formData,
+                users: { ...formData.users, email: e.target.value },
+              })
             }
             placeholder="email@example.com"
           />
@@ -155,11 +167,11 @@ export default function RegisterForm({
                   name="ageGroup"
                   value={age}
                   required
-                  checked={formData.ageGroup === age}
+                  checked={formData.users.ageGroup === age}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      ageGroup: e.target.value,
+                      users: { ...formData.users, ageGroup: e.target.value },
                     })
                   }
                 />
@@ -186,7 +198,7 @@ export default function RegisterForm({
                   name="classType"
                   value={classType}
                   required
-                  checked={formData.selectedClassType === classType}
+                  checked={formData.programs.program_type === classType}
                   onChange={(e) => {
                     const selectedType = e.target.value;
                     let paymentAmount = 0;
@@ -207,8 +219,11 @@ export default function RegisterForm({
 
                     setFormData({
                       ...formData,
-                      selectedClassType: selectedType,
-                      paymentAmount: paymentAmount,
+                      programs: {
+                        ...formData.programs,
+                        program_type: selectedType,
+                      },
+                      payments: { ...formData.payments, amount: paymentAmount },
                     });
                   }}
                 />
@@ -221,7 +236,7 @@ export default function RegisterForm({
         <div>
           <DatePicker
             title="첫 수업 희망일"
-            value={formData.preferredDate}
+            value={formData.programs.preferred_start_date}
             onChange={handleDateChange}
             minDate={new Date()}
             width="w-2/5"
@@ -240,11 +255,14 @@ export default function RegisterForm({
                   name="preferredTime"
                   value={time}
                   required
-                  checked={formData.preferredTime === time}
+                  checked={formData.programs.preferred_time === time}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      preferredTime: e.target.value,
+                      programs: {
+                        ...formData.programs,
+                        preferred_time: e.target.value,
+                      },
                     })
                   }
                   className="mr-2 w-5 h-5 border border-gray-300"
@@ -261,11 +279,14 @@ export default function RegisterForm({
               <input
                 type="checkbox"
                 required
-                checked={formData.agreementChecked}
+                checked={formData.trial_registration.consent_to_terms}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    agreementChecked: e.target.checked,
+                    trial_registration: {
+                      ...formData.trial_registration,
+                      consent_to_terms: e.target.checked,
+                    },
                   })
                 }
                 className="mr-2 w-4 h-4 xs:w-3 xs:h-3"

@@ -1,16 +1,30 @@
 // 이 파일은 @/app/types/registration.ts 경로에 저장하세요.
 
 export interface RegistrationData {
-  name: string;
-  phone: string;
-  email?: string;
-  ageGroup: '40대' | '50대' | '60대' | '그 외' | string;
-  preferredDate: Date | string;
-  preferredTime: '오전 08:15' | '오전 09:30' | '오전 10:45' | string;
-  selectedClassType: string;
-  agreementChecked: boolean;
-  paymentAmount?: number;
-  orderName: string;
+  users: {
+    name: string;
+    phone: string;
+    email?: string;
+    ageGroup: '40대' | '50대' | '60대' | '그 외' | string;
+    profile_image_url: string;
+    kakao_id: string;
+  };
+  programs: {
+    program_type: string;
+    preferred_start_date: Date | string;
+    preferred_time: string;
+    consent_to_terms: boolean;
+  };
+  payments: {
+    amount: number;
+    payment_method: string;
+    payment_key: string;
+    order_id: string;
+    payment_date: Date | string;
+  };
+  trial_registration: {
+    consent_to_terms: boolean;
+  };
 }
 
 export interface SubmitStatus {

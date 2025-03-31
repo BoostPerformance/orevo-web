@@ -71,7 +71,7 @@ export default function MainImage() {
         <Button
           variant="green"
           href="/register"
-          className="lg:text-1-700 md:text-0.875-700 sm:text-0.875-700 xs:text-0.75-700"
+          className=" md:text-0.875-700 sm:text-0.875-700 xs:text-0.75-700"
         >
           체험수업 신청하기
         </Button>

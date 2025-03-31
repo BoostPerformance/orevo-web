@@ -2,10 +2,10 @@ import './globals.css';
 import Footer from '@/app/components/common/footer';
 import Header from '@/app/components/common/header';
 import Script from 'next/script';
-import { Metadata, Viewport } from 'next';
+import { Metadata } from 'next';
 import Providers from '@/app/providers';
 
-export const viewport: Viewport = {
+export const viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
