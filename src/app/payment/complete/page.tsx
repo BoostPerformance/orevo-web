@@ -1,6 +1,9 @@
 import PaymentComplete from '@/app/components/paymentComplete';
 import React, { Suspense } from 'react';
 import Loading from '@/app/components/common/loading';
+import { viewport } from './viewport';
+
+export { viewport };
 
 const Complete = () => {
   return (

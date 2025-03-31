@@ -74,89 +74,47 @@ export default function RegisterPage() {
         process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || 'no key'
       );
 
-      // console.log('Form Data:', formData);
-
+      // PaymentComplete.tsx와 형식을 일치시키기 위해 데이터 구조 변경
       localStorage.setItem(
-        'formData',
+        'registrationData',
         JSON.stringify({
-          ...formData,
-          payment_info: {
-            ...formData.payments,
-            order_id: orderId,
-            amount: Number(`${price}`),
-          },
+          name: formData.users.name,
+          phone: formData.users.phone,
+          email: formData.users.email,
+          ageGroup: formData.users.ageGroup,
+          preferredDate: formData.programs.preferred_start_date,
+          preferredTime: formData.programs.preferred_time,
+          selectedClassType: formData.programs.program_type,
+          agreementChecked: formData.trial_registration.consent_to_terms,
+          paymentAmount: price || formData.payments.amount,
+          orderId: orderId,
         })
       );
 
       console.log('새로운 주문번호 생성:', orderId);
-      //console.log('Form data saved:', JSON.stringify(formData));
+      console.log(
+        'Form data saved to registrationData:',
+        JSON.stringify({
+          name: formData.users.name,
+          phone: formData.users.phone,
+          email: formData.users.email,
+          ageGroup: formData.users.ageGroup,
+          preferredDate: formData.programs.preferred_start_date,
+          preferredTime: formData.programs.preferred_time,
+          selectedClassType: formData.programs.program_type,
+          agreementChecked: formData.trial_registration.consent_to_terms,
+          paymentAmount: price || formData.payments.amount,
+          orderId: orderId,
+        })
+      );
 
       await tossPayments.requestPayment('카드', {
-        amount: Number(`${formData.payments.amount}`),
+        amount: Number(`${price || formData.payments.amount}`),
         orderId,
         orderName: `${formData.programs.program_type}`,
         successUrl: `${window.location.origin}/payment/complete`,
         failUrl: `${window.location.origin}/register`,
       });
-
-      // // Save form data to localStorage for retrieval after payment
-      // localStorage.setItem(
-      //   'registrationData',
-      //   JSON.stringify({
-      //     ...formData,
-      //     orderId,
-      //     paymentStatus: 'pending',
-      //     submissionDate: new Date().toISOString(),
-      //   })
-      // );
-
-      // // API 호출 예시 (실제 구현은 필요에 따라 조정)
-      // // 여기서 수업 유형 및 다른 정보를 포함하여 데이터베이스에 저장
-      // try {
-      //   const response = await fetch('/api/payment', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify({
-      //       name: formData.name,
-      //       phone: formData.phone,
-      //       email: formData.email || null,
-      //       age_group:
-      //         formData.ageGroup === '40대'
-      //           ? '40s'
-      //           : formData.ageGroup === '50대'
-      //           ? '50s'
-      //           : formData.ageGroup === '60대'
-      //           ? '60s'
-      //           : 'OTHER',
-      //       preferred_start_date: formData.preferredDate,
-      //       preferred_time: formData.preferredTime.replace('오전 ', ''),
-      //       class_type: formData.selectedClassType,
-      //       consent_to_terms: formData.agreementChecked,
-      //       payment_status: 'PENDING',
-      //       price: formData.paymentAmount,
-      //       orderId: orderId,
-      //     }),
-      //   });
-
-      //   if (!response.ok) {
-      //     throw new Error('서버 등록 실패');
-      //   }
-      // } catch (apiError) {
-      //   console.error('API call failed:', apiError);
-      //   // API 호출이 실패해도 결제는 진행
-      // }
-
-      // // Request payment
-      // await tossPayments.requestPayment('카드', {
-      //   amount: formData.paymentAmount || 0,
-      //   orderId,
-      //   orderName: formData.orderName,
-      //   customerName: formData.name,
-      //   successUrl: `${window.location.origin}/payment/success`,
-      //   failUrl: `${window.location.origin}/payment/fail`,
-      // });
     } catch (error) {
       console.error('Error initiating payment:', error);
       setSubmitStatus({

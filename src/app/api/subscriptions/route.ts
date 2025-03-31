@@ -60,8 +60,7 @@ export async function POST(request: Request) {
       },
       payments: {
         amount: payments.amount,
-        payment_key: payments.payment_key,
-        order_id: payments.order_id,
+        transaction_id: payments.transaction_id, // payment_key 대신 transaction_id로 수정
       },
     });
 
@@ -111,7 +110,7 @@ export async function POST(request: Request) {
     const userId = userData.id;
     console.log('[API:subscriptions] 사용자 정보 저장 성공, userId:', userId);
 
-    // 2. 결제 정보 저장
+    // 2. 결제 정보 저장 - 수정된 부분: 필드 매핑을 데이터베이스 스키마에 맞게 수정
     console.log('[API:subscriptions] 결제 정보 저장 시도');
     const { data: paymentData, error: paymentError } = await supabase
       .from('payments')
@@ -119,17 +118,11 @@ export async function POST(request: Request) {
         user_id: userId,
         amount: payments.amount,
         payment_method: payments.payment_method,
-        payment_status: 'COMPLETED',
+        payment_status: payments.payment_status || 'COMPLETED',
         reference_type:
           programs.program_type === 'TRIAL' ? 'TRIAL' : 'MEMBERSHIP',
-        transaction_id: payments.payment_key,
-        order_id: payments.order_id,
-        payment_date: payments.payment_date,
-        card_type: payments.card_type,
-        owner_type: payments.owner_type,
-        currency: payments.currency,
-        status: payments.status,
-        approve_no: payments.approve_no,
+        transaction_id: payments.transaction_id,
+        // 수정: 불필요한 필드 제거
       })
       .select('id')
       .single();
@@ -155,6 +148,33 @@ export async function POST(request: Request) {
     // 3. 프로그램 유형에 따라 다른 테이블에 데이터 저장
     const programType = programs.program_type; // 'TRIAL', 'MONTHLY', 'PACKAGE_10' 등
     console.log('[API:subscriptions] 프로그램 유형:', programType);
+
+    // 사용자가 기존에 체험을 했는지 확인 (trial_registrations 테이블 조회)
+    const { data: existingTrialData, error: existingTrialError } =
+      await supabase
+        .from('trial_registrations')
+        .select('is_first_time')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+    if (!existingTrialData) {
+      console.error(
+        '[API:subscriptions] 체험 기록 조회 실패:',
+        existingTrialError
+      );
+    } else {
+      console.log('[API:subscriptions] 체험 기록:', existingTrialData);
+    }
+
+    // 이전 체험 여부 확인
+    const isFirstTrial =
+      !existingTrialData ||
+      existingTrialData.length === 0 ||
+      existingTrialData[0].is_first_time;
+    console.log('[API:subscriptions] 첫 체험 여부:', isFirstTrial);
+
+    let trialRegistrationId = null; // 체험 등록 ID를 저장하기 위한 변수
 
     if (programType === 'TRIAL') {
       console.log('[API:subscriptions] TRIAL 프로그램 등록 시도');
@@ -186,20 +206,21 @@ export async function POST(request: Request) {
         membershipTypeData
       );
 
-      // 체험 프로그램 등록
-      const { error: trialError } = await supabase
+      // 체험 프로그램 등록 - 수정: payment_id 필드 제거
+      const { data: newTrialData, error: trialError } = await supabase
         .from('trial_registrations')
         .insert({
           user_id: userId,
           preferred_start_date: programs.preferred_start_date,
-          preferred_time: programs.preferred_time,
           consent_to_terms: programs.consent_to_terms,
-          is_first_time: true,
+          is_first_time: isFirstTrial,
           registration_status: 'CONFIRMED',
           payment_status: 'COMPLETED',
           price: membershipTypeData.price,
-          payment_id: paymentId,
-        });
+          // payment_id 필드 제거
+        })
+        .select('id, is_first_time')
+        .single();
 
       if (trialError) {
         console.error(
@@ -217,6 +238,7 @@ export async function POST(request: Request) {
       }
 
       console.log('[API:subscriptions] 체험 프로그램 등록 성공');
+      trialRegistrationId = newTrialData.id; // 체험 등록 ID 저장
     } else {
       console.log(
         '[API:subscriptions] 일반 멤버십 등록 시도, 프로그램 타입:',
@@ -226,7 +248,7 @@ export async function POST(request: Request) {
       const { data: membershipTypeData, error: membershipTypeError } =
         await supabase
           .from('membership_types')
-          .select('id, price, period_days, class_limit')
+          .select('id, period_days, is_active')
           .eq('name', programType)
           .single();
 
@@ -250,18 +272,22 @@ export async function POST(request: Request) {
         membershipTypeData
       );
 
-      // 시작일과 종료일 계산
+      // 시작일과 종료일 계산 - TRIAL일 경우 3주(21일)로 고정, 아닐 경우 membershipTypeData.period_days 사용
       const startDate = new Date();
       const endDate = new Date();
-      endDate.setDate(startDate.getDate() + membershipTypeData.period_days);
+
+      // programType이 'TRIAL'이면 21일, 아니면 membershipTypeData.period_days 사용
+      const periodDays =
+        programType === 'TRIAL' ? 21 : membershipTypeData.period_days;
+      endDate.setDate(startDate.getDate() + periodDays);
 
       console.log('[API:subscriptions] 멤버십 기간:', {
         startDate: startDate.toISOString().split('T')[0],
         endDate: endDate.toISOString().split('T')[0],
-        periodDays: membershipTypeData.period_days,
+        periodDays: periodDays,
       });
 
-      // 멤버십 등록
+      // 멤버십 등록 - 수정: is_first_trial 참조 오류 수정
       const { error: membershipError } = await supabase
         .from('user_memberships')
         .insert({
@@ -269,10 +295,8 @@ export async function POST(request: Request) {
           membership_type_id: membershipTypeData.id,
           start_date: startDate.toISOString().split('T')[0],
           end_date: endDate.toISOString().split('T')[0],
-          remaining_classes: membershipTypeData.class_limit,
           payment_status: 'COMPLETED',
-          payment_id: paymentId,
-          preferred_time: programs.preferred_time,
+          is_first_trial: isFirstTrial, // trialData 대신 isFirstTrial 사용
         });
 
       if (membershipError) {
@@ -294,10 +318,15 @@ export async function POST(request: Request) {
     console.log(
       '[API:subscriptions] 결제 정보 업데이트 시도 (reference_id 설정)'
     );
+
+    // TRIAL일 경우 생성된 trial_registration의 ID를 reference_id로 사용,
+    // 그렇지 않으면 userId를 reference_id로 사용
+    const referenceId = programType === 'TRIAL' ? trialRegistrationId : userId;
+
     const { error: paymentUpdateError } = await supabase
       .from('payments')
       .update({
-        reference_id: userId,
+        reference_id: referenceId,
       })
       .eq('id', paymentId);
 
