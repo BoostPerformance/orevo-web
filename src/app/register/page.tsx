@@ -8,19 +8,38 @@ import RegisterForm from '@/app/components/registerForm';
 import { RegistrationData } from '@/app/types/registration';
 import PricingChart from '@/app/components/pricingChart';
 import WeeklySchedule from '@/app/components/weeklySchedule';
+import { useSearchParams } from 'next/navigation';
 
 export default function RegisterPage() {
+  const searchParams = useSearchParams();
+  const priceParam = searchParams.get('price');
+  const price = priceParam ? Number(priceParam.replace(/,/g, '')) : 0;
+
   const [formData, setFormData] = useState<RegistrationData>({
-    name: '',
-    phone: '',
-    email: '',
-    ageGroup: '',
-    preferredDate: '',
-    preferredTime: '',
-    selectedClassType: '',
-    agreementChecked: false,
-    paymentAmount: 0,
-    orderName: '',
+    users: {
+      name: '',
+      phone: '',
+      email: '',
+      ageGroup: '',
+      profile_image_url: '',
+      kakao_id: '',
+    },
+    programs: {
+      program_type: '',
+      preferred_start_date: '',
+      preferred_time: '',
+      consent_to_terms: false,
+    },
+    payments: {
+      amount: 0,
+      payment_method: '',
+      payment_key: '',
+      order_id: '',
+      payment_date: '',
+    },
+    trial_registration: {
+      consent_to_terms: false,
+    },
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,6 +53,18 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('Form Data Before Submit:', {
+      name: formData.users.name,
+      phone: formData.users.phone,
+      email: formData.users.email,
+      ageGroup: formData.users.ageGroup,
+      preferredDate: formData.programs.preferred_start_date,
+      preferredTime: formData.programs.preferred_time,
+      selectedClassType: formData.programs.program_type,
+      consent_to_terms: formData.trial_registration.consent_to_terms,
+      paymentAmount: formData.payments.amount,
+    });
+
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
 
@@ -45,17 +76,27 @@ export default function RegisterPage() {
 
       // console.log('Form Data:', formData);
 
-      localStorage.setItem('formData', JSON.stringify(formData));
+      localStorage.setItem(
+        'formData',
+        JSON.stringify({
+          ...formData,
+          payment_info: {
+            ...formData.payments,
+            order_id: orderId,
+            amount: Number(`${price}`),
+          },
+        })
+      );
 
       console.log('새로운 주문번호 생성:', orderId);
       //console.log('Form data saved:', JSON.stringify(formData));
 
       await tossPayments.requestPayment('카드', {
-        amount: Number(`${formData.paymentAmount}`),
+        amount: Number(`${formData.payments.amount}`),
         orderId,
-        orderName: `${formData.selectedClassType}`,
+        orderName: `${formData.programs.program_type}`,
         successUrl: `${window.location.origin}/payment/complete`,
-        failUrl: `${window.location.origin}/payment-fail`,
+        failUrl: `${window.location.origin}/register`,
       });
 
       // // Save form data to localStorage for retrieval after payment

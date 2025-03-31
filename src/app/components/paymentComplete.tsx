@@ -99,28 +99,48 @@ export default function PaymentComplete() {
 
   const mutation = useMutation<void, Error, FormData>({
     mutationFn: async (formData) => {
-      const response = await fetch('/api/subscriptions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      console.log(
+        '[PaymentComplete] /api/subscriptions API 호출 시작 - 요청 데이터:',
+        formData
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '폼 제출에 실패했습니다.');
+      try {
+        const response = await fetch('/api/subscriptions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        console.log('[PaymentComplete] API 응답 상태:', response.status);
+
+        const responseData = await response.json();
+        console.log('[PaymentComplete] API 응답 데이터:', responseData);
+
+        if (!response.ok) {
+          console.error('[PaymentComplete] API 오류 응답:', responseData);
+          throw new Error(responseData.message || '폼 제출에 실패했습니다.');
+        }
+
+        return responseData;
+      } catch (error) {
+        console.error('[PaymentComplete] API 호출 중 예외 발생:', error);
+        throw error;
       }
-
-      return response.json();
     },
     onSuccess: async (data) => {
-      console.log('폼 제출 성공:', data);
+      console.log('[PaymentComplete] 폼 제출 성공:', data);
       // 성공 시 localStorage의 임시 데이터 삭제
       localStorage.removeItem('registrationData');
-      window.location.href = '/payment-success';
+      // window.location.href = '/payment-success';
     },
     onError: (error) => {
-      console.error('폼 제출 중 에러 발생:', error);
-      window.location.href = '/payment-fail';
+      console.error('[PaymentComplete] 폼 제출 중 에러 발생:', error);
+      // 에러의 원인을 더 자세히 추적
+      if (error instanceof Error) {
+        console.error('[PaymentComplete] 에러 메시지:', error.message);
+        console.error('[PaymentComplete] 에러 스택:', error.stack);
+      }
+      //  window.location.href = '/payment-fail';
     },
   });
 
