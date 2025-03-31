@@ -7,7 +7,7 @@ import Registration from '@/app/components/registration';
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center w-full min-h-screen bg-beige-DEFAULT">
+    <main className="flex flex-col items-center min-h-screen bg-beige-DEFAULT w-full">
       <MainImage />
       <Intro />
       <Programs />

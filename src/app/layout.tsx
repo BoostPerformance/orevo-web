@@ -3,6 +3,7 @@ import Footer from '@/app/components/common/footer';
 import Header from '@/app/components/common/header';
 import Script from 'next/script';
 import { Metadata, Viewport } from 'next';
+import Providers from '@/app/providers';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -49,7 +50,7 @@ export default function RootLayout({
       </Script>
       <body className="font-pretendard">
         <Header />
-        {children}
+        <Providers>{children}</Providers>
         <Footer />
       </body>
     </html>

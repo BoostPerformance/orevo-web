@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { format } from 'date-fns';
+import { format, isBefore, startOfToday } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
 interface DatePickerProps {
-  value?: string;
+  value?: Date | string;
   onChange?: (date: string) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -40,7 +40,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   value,
   onChange,
   placeholder = '  날짜 선택',
-  minDate,
+  minDate = startOfToday(),
   width = 'w-full',
   title,
 }) => {
@@ -73,14 +73,16 @@ const DatePicker: React.FC<DatePickerProps> = ({
   }, []);
 
   const handleDaySelect = (date: Date | undefined) => {
-    setSelected(date);
-    if (date) {
+    if (date && !isBefore(date, startOfToday())) {
+      setSelected(date);
       if (onChange) {
         onChange(date.toISOString());
       }
       setIsCalendarOpen(false);
     }
   };
+
+  const disabledDays = { before: startOfToday() };
 
   return (
     <div className="relative" ref={calendarRef}>
@@ -93,7 +95,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           readOnly
           value={selected ? format(selected, 'PPP', { locale: ko }) : ''}
           onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-          className="lg:w-[10rem] xs:w-[8rem] h-[2rem] mr-2 p-2 border rounded cursor-pointer focus:ring-2 focus:ring-green focus:border-transparent pr-10 placeholder:text-1-500 sm:w-[8rem] sm:h-[1.5rem]"
+          className="lg:w-[13rem] xs:w-[8rem] h-[2rem] mr-2 p-2 border rounded cursor-pointer focus:ring-2 focus:ring-green focus:border-transparent pr-10 text-1.125-500 placeholder:text-1-500 sm:w-[8rem] sm:h-[1.5rem]"
           placeholder={placeholder}
         />
         <div className="absolute lg:right-1 top-3 xs:left-[8.5rem] transform-translate-y-1/2 text-gray-400">
@@ -108,6 +110,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             onSelect={handleDaySelect}
             locale={ko}
             fromDate={minDate}
+            disabled={disabledDays}
             className="p-3"
           />
         </div>
