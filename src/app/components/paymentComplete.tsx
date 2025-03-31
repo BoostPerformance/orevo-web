@@ -1,24 +1,55 @@
-// PaymentComplete.tsx 수정 버전
 'use client';
 import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Loading from './common/loading';
 import { useMutation } from '@tanstack/react-query';
 
-// 폼 데이터 유효성 검사 (1. 필수 필드 검사)
-const validateFormData = (formData: any) => {
-  try {
-    // exercise_preferences 필드를 제거하고, 실제로 필요한 필드만 확인
-    console.log('formData', formData);
-    const requiredFields = ['users', 'programs'];
+interface FormData {
+  users: {
+    name: string;
+    phone: string;
+    email: string | null;
+    age_group: string;
+    profile_image_url: string | null;
+    kakao_id: string | null;
+  };
+  programs: {
+    program_type: string;
+    preferred_start_date: string;
+    preferred_time: string;
+    consent_to_terms: boolean;
+  };
+  payments: {
+    amount: number;
+    payment_method: string;
+    payment_key: string;
+    order_id: string;
+    payment_date: string;
+    card_type: string | null;
+    owner_type: string | null;
+    currency: string;
+    status: string;
+    approve_no: string | null;
+  };
+}
 
-    const missingFields = requiredFields.filter((field) => !formData[field]);
+// 폼 데이터 유효성 검사 (1. 필수 필드 검사)
+const validateFormData = (formData: FormData) => {
+  try {
+    console.log('formData', formData);
+    const requiredFields = ['users', 'programs', 'payments'] as const;
+    //type RequiredField = (typeof requiredFields)[number];
+
+    const missingFields = requiredFields.filter(
+      (field) => !(field in formData)
+    );
 
     return {
       isValid: missingFields.length === 0,
       missingFields,
     };
   } catch (error) {
+    console.error('폼 데이터 유효성 검사 중 에러 발생:', error);
     return {
       isValid: false,
       missingFields: [],
@@ -35,19 +66,23 @@ interface PaymentRequestData {
 const attemptPaymentConfirmation = async (requestData: PaymentRequestData) => {
   let attempts = 0;
   while (attempts < 3) {
-    const paymentResponse = await fetch('/api/payment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestData),
-    });
+    try {
+      const paymentResponse = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData),
+      });
 
-    if (paymentResponse.ok) {
-      const json = await paymentResponse.json();
+      if (paymentResponse.ok) {
+        const json = await paymentResponse.json();
 
-      if (json.error) {
-        throw new Error(json.message || '결제 확인에 실패했습니다');
+        if (json.error) {
+          throw new Error(json.message || '결제 확인에 실패했습니다');
+        }
+        return json;
       }
-      return json;
+    } catch (error) {
+      console.error('Payment confirmation attempt failed:', error);
     }
 
     await new Promise((r) => setTimeout(r, 1000));
@@ -62,7 +97,7 @@ export default function PaymentComplete() {
   const searchParams = useSearchParams();
   const isProcessingRef = useRef(false);
 
-  const mutation = useMutation({
+  const mutation = useMutation<void, Error, FormData>({
     mutationFn: async (formData) => {
       const response = await fetch('/api/subscriptions', {
         method: 'POST',
@@ -71,13 +106,16 @@ export default function PaymentComplete() {
       });
 
       if (!response.ok) {
-        throw new Error('폼 제출에 실패했습니다.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || '폼 제출에 실패했습니다.');
       }
 
       return response.json();
     },
     onSuccess: async (data) => {
       console.log('폼 제출 성공:', data);
+      // 성공 시 localStorage의 임시 데이터 삭제
+      localStorage.removeItem('registrationData');
       window.location.href = '/payment-success';
     },
     onError: (error) => {
@@ -92,7 +130,7 @@ export default function PaymentComplete() {
 
     const confirmPayment = async () => {
       try {
-        // 2. localStorage 키 수정 - 'registrationData'로 불러오기
+        // localStorage에서 registrationData 불러오기
         const savedFormData = localStorage.getItem('registrationData');
 
         if (!savedFormData) {
@@ -101,36 +139,7 @@ export default function PaymentComplete() {
 
         const registrationData = JSON.parse(savedFormData);
 
-        // 3. 데이터 구조 변환 - RegisterForm에서 API로 필요한 형식으로 변환
-        const formData = {
-          users: {
-            name: registrationData.name,
-            phone: registrationData.phone,
-            email: registrationData.email || null,
-            age_group: mapAgeGroup(registrationData.ageGroup),
-            profile_image_url: null,
-            kakao_id: null,
-          },
-          // 빈 객체지만 스키마 검증을 위해 포함
-          exercise_preferences: {},
-          programs: {
-            program_type: mapProgramType(registrationData.selectedClassType),
-            preferred_start_date: registrationData.preferredDate,
-            preferred_time: registrationData.preferredTime.replace('오전 ', ''),
-            consent_to_terms: registrationData.agreementChecked,
-          },
-        };
-
-        const validation = validateFormData(formData);
-
-        if (!validation.isValid) {
-          throw new Error(
-            `필수 데이터가 누락되었습니다: ${validation.missingFields.join(
-              ', '
-            )}`
-          );
-        }
-
+        // API 요청 파라미터 구성
         const requestData = {
           orderId: searchParams.get('orderId'),
           amount: searchParams.get('amount'),
@@ -145,28 +154,56 @@ export default function PaymentComplete() {
           throw new Error('결제 정보가 누락되었습니다');
         }
 
+        // 토스페이먼츠 결제 확인 API 호출
         const paymentResult = await attemptPaymentConfirmation(requestData);
 
-        const mutationData = {
-          ...formData,
-          payment_info: {
+        console.log('paymentResult', paymentResult);
+
+        // API 호출에 필요한 데이터 구조 생성
+        const formData = {
+          users: {
+            name: registrationData.name,
+            phone: registrationData.phone,
+            email: registrationData.email || null,
+            age_group: mapAgeGroup(registrationData.ageGroup),
+            profile_image_url: null,
+            kakao_id: null,
+          },
+          programs: {
+            program_type: mapProgramType(registrationData.selectedClassType),
+            preferred_start_date: registrationData.preferredDate,
+            preferred_time: registrationData.preferredTime.replace('오전 ', ''),
+            consent_to_terms: registrationData.agreementChecked,
+          },
+          payments: {
             amount:
-              paymentResult.card?.amount || parseInt(requestData.amount || '0'),
-            payment_date: paymentResult.approvedAt || new Date().toISOString(),
+              paymentResult.totalAmount || parseInt(requestData.amount || '0'),
             payment_method: paymentResult.method || '신용카드',
-            order_id: requestData.orderId,
-            payment_key: requestData.paymentKey,
-            card_type: paymentResult.card?.cardType || '카드 타입',
-            owner_type: paymentResult.card?.ownerType || '개인',
+            payment_key: paymentResult.paymentKey || requestData.paymentKey,
+            order_id: paymentResult.orderId || requestData.orderId,
+            payment_date: paymentResult.approvedAt || new Date().toISOString(),
+            card_type: paymentResult.card?.cardType || null,
+            owner_type: paymentResult.card?.ownerType || null,
             currency: paymentResult.currency || 'KRW',
             status: paymentResult.status || 'DONE',
-            approve_no: paymentResult.card?.approveNo || '승인번호',
+            approve_no: paymentResult.card?.approveNo || null,
           },
         };
 
-        console.log('mutationData', mutationData);
-        mutation.mutate(mutationData);
-      } catch (error: Error | any) {
+        // 데이터 유효성 검사
+        const validation = validateFormData(formData);
+
+        if (!validation.isValid) {
+          throw new Error(
+            `필수 데이터가 누락되었습니다: ${validation.missingFields.join(
+              ', '
+            )}`
+          );
+        }
+
+        console.log('최종 요청 데이터:', formData);
+        mutation.mutate(formData);
+      } catch (error) {
         const errorMessage =
           error instanceof Error
             ? error.message

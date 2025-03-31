@@ -4,7 +4,7 @@ import SnsIcons from './snsIcons';
 export default function Footer() {
   return (
     <footer className="w-full py-[3rem] px-4 border-t border-gray-3">
-      <div className="flex justify-between max-w-4xl mx-auto xs:flex-col xs:items-start xs:gap-[5rem]">
+      <div className="flex justify-between max-w-4xl mx-auto md:max-w-2xl sm:gap-[2rem] xs:flex-col xs:items-start xs:gap-[5rem]">
         <div className="flex flex-col gap-[2rem] ">
           {/* Company Info */}
           <div className="leading-7 text-gray-1 lg:text-1.25-500 xs:text-1-400">
@@ -23,7 +23,7 @@ export default function Footer() {
           </div>
 
           {/* Privacy Policy */}
-          <div className="flex items-center gap-4 lg:text-1.25-500 xs:text-1-400">
+          <div className="flex items-center gap-4 lg:text-1.25-500 xs:text-1-400 ">
             <Link
               href="/privacy-policy"
               className="text-gray-1 no-underline hover:text-gray-7"

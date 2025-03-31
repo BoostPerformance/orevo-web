@@ -23,10 +23,18 @@ export default function RegisterForm({
   isSubmitting,
   submitStatus,
 }: RegisterFormProps) {
+  const [mounted, setMounted] = useState(false);
   const [localFormValid, setLocalFormValid] = useState(false);
+
+  // Client-side only mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 폼 유효성 검사 로직
   useEffect(() => {
+    if (!mounted) return;
+
     const isValid =
       !!formData.name &&
       !!formData.phone &&
@@ -37,7 +45,7 @@ export default function RegisterForm({
       formData.agreementChecked;
 
     setLocalFormValid(isValid);
-  }, [formData]);
+  }, [formData, mounted]);
 
   // 전화번호 형식 검증
   // const validatePhoneNumber = (phone: string) => {
@@ -47,12 +55,11 @@ export default function RegisterForm({
 
   // 전화번호 입력 핸들러
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
+    if (!mounted) return;
 
-    // 숫자와 하이픈만 허용
+    let value = e.target.value;
     value = value.replace(/[^\d-]/g, '');
 
-    // 자동 하이픈 추가
     if (value.length === 3 && !value.includes('-')) {
       value += '-';
     } else if (
@@ -68,8 +75,13 @@ export default function RegisterForm({
 
   // 날짜 선택 핸들러
   const handleDateChange = (dateString: string) => {
+    if (!mounted) return;
     setFormData({ ...formData, preferredDate: dateString });
   };
+
+  if (!mounted) {
+    return null; // or a loading skeleton
+  }
 
   return (
     <form
