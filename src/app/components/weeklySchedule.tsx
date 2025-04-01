@@ -12,7 +12,7 @@ export default function WeeklySchedule() {
   };
 
   return (
-    <div className="w-full bg-[#F8F7F4] rounded-lg p-6 xs:px-2 border-green-800 text-gray-13">
+    <div className="w-full flex flex-col justify-center items-center bg-[#F8F7F4] rounded-lg p-6 xs:px-2 border-green-800 text-gray-13">
       <div className="lg:overflow-x-auto">
         <table className="w-full border-collapse text-sm xs:text-1-500">
           <thead>
@@ -33,7 +33,9 @@ export default function WeeklySchedule() {
           <tbody>
             <tr className="border-b border-green-800">
               <td className="p-4 xs:p-1 text-center font-medium border-t border-l border-r border-green-800">
-                <span className="xs:text-0.875-500">08:15</span>
+                <span className="lg:hidden md:hidden sm:hidden xs:text-0.875-500">
+                  8:15am
+                </span>
                 <span className="xs:hidden">오전 08:15</span>
               </td>
               {days.map((day) => (
@@ -50,13 +52,17 @@ export default function WeeklySchedule() {
             </tr>
             <tr className="border-b border-green-800">
               <td className="p-4 xs:p-2 text-center font-medium border-l border-r border-green-800">
-                <span className="xs:text-0.875-500">09:30</span>
+                <span className="lg:hidden md:hidden sm:hidden xs:text-0.875-500">
+                  9:30am
+                </span>
                 <span className="xs:hidden">오전 09:30</span>
               </td>
             </tr>
             <tr className="border-b border-green-800 last:border-b-2">
               <td className="p-4 xs:p-2 text-center font-medium border-l border-r border-green-800">
-                <span className="xs:text-0.875-500">10:45</span>
+                <span className="lg:hidden md:hidden sm:hidden xs:text-0.875-500">
+                  10:45am
+                </span>
                 <span className="xs:hidden">오전 10:45</span>
               </td>
             </tr>
@@ -64,7 +70,7 @@ export default function WeeklySchedule() {
         </table>
       </div>
       <p className="mt-4 text-sm xs:text-0.75-500 text-gray-600 text-center">
-        *스튜디오 사정으로 인하여 스케줄이 변경될 수도 있습니다.
+        *스튜디오 사정으로 인하여 스케줄이 변경될 수 있습니다.
       </p>
     </div>
   );

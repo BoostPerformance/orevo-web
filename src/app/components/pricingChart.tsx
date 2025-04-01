@@ -13,12 +13,12 @@ export default function PricingChart() {
     },
     {
       title: '10회권',
-      titleEn: '10 class packs',
+      titleEn: '10 classes pack',
       price: 250000,
     },
     {
       title: '3회 체험권',
-      titleEn: '3 class trial membership',
+      titleEn: '3 classes trial membership',
       price: 30000,
     },
   ];
@@ -54,12 +54,6 @@ export default function PricingChart() {
             </div>
           ))}
         </div>
-        <a
-          className="mt-6 text-center text-gray-500 lg:text-1-500 xs:text-0.75-500 flex justify-center no-underline"
-          href="https://www.instagram.com/orevo_official/"
-        >
-          @orevo_official
-        </a>
       </div>
     </div>
   );

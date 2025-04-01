@@ -158,7 +158,7 @@ export default function RegisterForm({
           <label className="block mb-4 lg:text-1.25-500 xs:text-1-500">
             연령대 <span className="text-red-500">*</span>
           </label>
-          <div className="flex flex-col gap-2 text-[1.125rem]">
+          <div className="flex flex-col gap-2 text-[1rem]">
             {['40대', '50대', '60대', '그 외'].map((age) => (
               <label key={age} className="inline-flex items-center">
                 <input
@@ -185,7 +185,7 @@ export default function RegisterForm({
           <label className="block mb-4 lg:text-1.25-500 xs:text-1-500 ">
             수업 종류 <span className="text-red-500">*</span>
           </label>
-          <div className="flex flex-col gap-4 text-[1.125rem]">
+          <div className="flex flex-col gap-4 text-[1rem]">
             {[
               '1개월 멤버십 (300,000원)',
               '10회권 (250,000원)',
@@ -247,9 +247,9 @@ export default function RegisterForm({
           <label className="block mb-4 lg:text-1.25-500 xs:text-1-500">
             참여 원하는 수업 시간 <span className="text-red-500">*</span>
           </label>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 lg:text-1.25-500 xs:text-1-500">
             {['오전 08:15', '오전 09:30', '오전 10:45'].map((time) => (
-              <label key={time} className="flex items-center text-[1.125rem]">
+              <label key={time} className="flex items-center text-[1rem]">
                 <input
                   type="radio"
                   name="preferredTime"
@@ -291,7 +291,7 @@ export default function RegisterForm({
                 }
                 className="mr-2 w-4 h-4 xs:w-3 xs:h-3"
               />
-              <span className="lg:text-1.25-500 xs:text-0.75-500">
+              <span className="lg:text-1.25-500 xs:text-0.8-500">
                 체험권은 첫 방문 후 3주 이내에 사용해야하며,
                 <br className="lg:hidden xs:inline" /> 해당 조건을 읽고
                 동의합니다. <span className="text-red-500">*</span>
@@ -314,7 +314,7 @@ export default function RegisterForm({
       </div>
 
       {!localFormValid && (
-        <div className="text-red-500 text-center">
+        <div className="text-red-500 text-center xs:text-0.8-500">
           모든 필수 항목을 입력해주세요.
         </div>
       )}

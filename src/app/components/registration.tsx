@@ -15,9 +15,8 @@ export default function Registration() {
               height={100}
               className="w-[16rem] h-[10rem] lg:w-[16rem] lg:h-[10rem] md:w-[14rem] md:h-[8rem] sm:w-[12rem] sm:h-[7rem] xs:w-[10rem] xs:h-[6rem]"
             />
-            <div className="lg:text-3-700 md:text-2.5-700 sm:text-2-700 xs:text-1.25-700 ">
-              지금, <br className="hidden xs:inline " />
-              당신을 위한 건강한 변화를 시작하세요.
+            <div className="lg:text-3-700 md:text-2.5-700 sm:text-1.25-500 xs:text-1.25-500 ">
+              지금, 당신을 위한 건강한 변화를 시작하세요.
             </div>
           </div>
           <Button variant="white" href="/register">
