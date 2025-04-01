@@ -28,11 +28,9 @@ export default function PaymentSuccess() {
           </h1>
           <p className="text-1.5-400 sm:text-center sm:text-base">
             <br />
-            곧 디스코드 입장 링크를
+            곧 작성하신 연락처로
             <br />
-            작성하신 연락처로
-            <br />
-            보내드릴게요!
+            연락드릴게요!
           </p>
         </div>
 
