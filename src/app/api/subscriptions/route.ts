@@ -1,6 +1,7 @@
 // app/api/subscriptions/route.ts
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { sendSlackNotification } from '@/app/utils/slack';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_ROLE_KEY!;
@@ -340,6 +341,38 @@ export async function POST(request: Request) {
       console.log('[API:subscriptions] 결제 정보 업데이트 성공');
     }
 
+    // Slack 알림 전송
+    console.log('[API:subscriptions] Slack 알림 전송 시도');
+    try {
+      // 프로그램 타입 한글로 변환
+      let programTypeKorean = '체험 수업';
+      if (programType === 'MONTHLY') {
+        programTypeKorean = '1개월 멤버십';
+      } else if (programType === 'PACKAGE_10') {
+        programTypeKorean = '10회권';
+      }
+
+      await sendSlackNotification({
+        name: users.name,
+        phone: users.phone,
+        ageGroup: mapAgeGroupToKorean(users.age_group),
+        preferredDate: programs.preferred_start_date,
+        preferredTime: `오전 ${programs.preferred_time}`,
+        paymentInfo: {
+          amount: payments.amount,
+          paymentMethod: payments.payment_method,
+          paymentDate: new Date().toLocaleString('ko-KR', {
+            timeZone: 'Asia/Seoul',
+          }),
+          programType: programTypeKorean,
+        },
+      });
+      console.log('[API:subscriptions] Slack 알림 전송 성공');
+    } catch (slackError) {
+      console.error('[API:subscriptions] Slack 알림 전송 실패:', slackError);
+      // Slack 알림 실패는 전체 프로세스를 실패시키지 않음
+    }
+
     console.log('[API:subscriptions] 모든 처리 성공, 응답 반환');
     return NextResponse.json(
       {
@@ -359,5 +392,19 @@ export async function POST(request: Request) {
       },
       { status: 500 }
     );
+  }
+}
+
+// 연령대 영문 코드를 한글로 변환하는 함수
+function mapAgeGroupToKorean(ageGroup: string): string {
+  switch (ageGroup) {
+    case '40s':
+      return '40대';
+    case '50s':
+      return '50대';
+    case '60s':
+      return '60대';
+    default:
+      return '그 외';
   }
 }

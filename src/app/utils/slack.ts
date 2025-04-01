@@ -1,12 +1,18 @@
-interface RegistrationData {
+interface SlackNotificationData {
   name: string;
   phone: string;
   ageGroup: string;
   preferredDate: string;
   preferredTime: string;
+  paymentInfo?: {
+    amount: number;
+    paymentMethod: string;
+    paymentDate: string;
+    programType: string;
+  };
 }
 
-export async function sendSlackNotification(data: RegistrationData) {
+export async function sendSlackNotification(data: SlackNotificationData) {
   const SLACK_WEBHOOK_URL = process.env.NEXT_PUBLIC_SLACK_WEBHOOK_URL;
 
   if (!SLACK_WEBHOOK_URL) {
@@ -20,7 +26,7 @@ export async function sendSlackNotification(data: RegistrationData) {
         type: 'header',
         text: {
           type: 'plain_text',
-          text: '🎉 새로운 체험 수업 신청이 들어왔습니다!',
+          text: '🎉 새로운 수업 신청 및 결제가 완료되었습니다!',
           emoji: true,
         },
       },
@@ -72,6 +78,37 @@ export async function sendSlackNotification(data: RegistrationData) {
       },
     ],
   };
+
+  // 결제 정보가 있으면 추가
+  if (data.paymentInfo) {
+    message.blocks.splice(4, 0, {
+      type: 'section',
+      fields: [
+        {
+          type: 'mrkdwn',
+          text: `*결제금액:*\n${data.paymentInfo.amount.toLocaleString()}원`,
+        },
+        {
+          type: 'mrkdwn',
+          text: `*결제방법:*\n${data.paymentInfo.paymentMethod}`,
+        },
+      ],
+    });
+
+    message.blocks.splice(5, 0, {
+      type: 'section',
+      fields: [
+        {
+          type: 'mrkdwn',
+          text: `*프로그램:*\n${data.paymentInfo.programType}`,
+        },
+        {
+          type: 'mrkdwn',
+          text: `*결제일시:*\n${data.paymentInfo.paymentDate}`,
+        },
+      ],
+    });
+  }
 
   try {
     const response = await fetch(SLACK_WEBHOOK_URL, {
