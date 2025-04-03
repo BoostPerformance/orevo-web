@@ -80,14 +80,11 @@ export default function Programs() {
 
       <section className="w-full max-w-4xl mx-auto py-20 lg:py-20 md:py-16 sm:py-12 xs:py-10 px-4 mb-[2rem] lg:mb-[2rem] md:mb-[1.5rem] sm:mb-[1.25rem] xs:mb-[1rem] xs:px-0">
         <div className="text-2-700 lg:text-2-700 md:text-1.75-700 sm:text-1.5-700 xs:text-1.25-700 text-center mb-8 lg:mb-8 md:mb-6 sm:mb-4 xs:mb-3 text-green">
-          장소
+          위치
         </div>
         <div className="text-1.5-500 lg:text-1.5-500 md:text-1.25-500 sm:text-1.25-500 xs:text-1-500 text-center text-gray-5">
           <span className="lg:inline md:inline sm:inline xs:block">
-            서울 서대문구 연희로5길 26-17 4층
-          </span>{' '}
-          <span className="lg:inline md:inline sm:inline xs:inline">
-            (신촌 현대백화점 도보 3분)
+            서울특별시 서대문구 증가로 26-1 (1층)
           </span>
         </div>
       </section>
